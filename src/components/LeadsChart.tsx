@@ -58,7 +58,7 @@ export default function LeadsChart({ leads, dailySummary, period, loading }: Lea
           <div className="h-6 bg-gray-200 rounded w-32 animate-pulse"></div>
           <div className="h-4 bg-gray-200 rounded w-24 animate-pulse"></div>
         </div>
-        <div className="h-80 bg-gray-100 rounded-lg animate-pulse"></div>
+        <div className="h-80 bg-accent rounded-lg animate-pulse"></div>
       </div>
     )
   }
