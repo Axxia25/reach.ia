@@ -8,6 +8,7 @@ import MetricsCards from '@/components/MetricsCards'
 import LeadsChart from '@/components/LeadsChart'
 import VendorsPanel from '@/components/VendorsPanel'
 import LeadsTable from '@/components/LeadsTable'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { LogOut, RefreshCw, Calendar } from 'lucide-react'
 
 export default function DashboardPage() {
@@ -62,13 +63,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-card-foreground">
                 Dashboard Leads
               </h1>
             </div>
@@ -76,11 +77,11 @@ export default function DashboardPage() {
             <div className="flex items-center space-x-4">
               {/* Seletor de período */}
               <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-gray-500" />
+                <Calendar className="w-4 h-4 text-muted-foreground" />
                 <select
                   value={period}
                   onChange={(e) => setPeriod(Number(e.target.value))}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="border border-border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-background"
                 >
                   {periodOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -94,22 +95,25 @@ export default function DashboardPage() {
               <button
                 onClick={refetch}
                 disabled={loading}
-                className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+                className="p-2 text-muted-foreground hover:text-card-foreground hover:bg-accent rounded-lg transition-colors disabled:opacity-50"
                 title="Atualizar dados"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
               </button>
 
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
               {/* User info e logout */}
               <div className="flex items-center space-x-3">
                 <div className="text-sm">
-                  <div className="font-medium text-gray-900">
+                  <div className="font-medium text-card-foreground">
                     {user.email}
                   </div>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="p-2 text-muted-foreground hover:text-card-foreground hover:bg-accent rounded-lg transition-colors"
                   title="Sair"
                 >
                   <LogOut className="w-4 h-4" />
