@@ -27,7 +27,7 @@ export default function Loading({
       <div className="flex flex-col items-center space-y-3">
         <Loader2 className={`${sizeClasses[size]} text-primary-500 animate-spin`} />
         {text && (
-          <p className="text-sm text-gray-600 font-medium">
+          <p className="text-sm text-muted-foreground font-medium">
             {text}
           </p>
         )}
@@ -37,7 +37,7 @@ export default function Loading({
 
   if (fullScreen) {
     return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         {spinner}
       </div>
     )
@@ -48,18 +48,18 @@ export default function Loading({
 
 // Loading skeleton components
 export function LoadingSkeleton({ className = '' }: { className?: string }) {
-  return <div className={`bg-gray-200 animate-pulse rounded ${className}`} />
+  return <div className={`bg-accent animate-pulse rounded ${className}`} />
 }
 
 export function LoadingCard() {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+    <div className="bg-card rounded-xl p-6 shadow-card border border-border">
       <div className="animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+        <div className="h-8 bg-accent rounded w-1/3 mb-4"></div>
         <div className="space-y-3">
-          <div className="h-4 bg-gray-200 rounded"></div>
-          <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-4 bg-accent rounded"></div>
+          <div className="h-4 bg-accent rounded w-5/6"></div>
+          <div className="h-4 bg-accent rounded w-3/4"></div>
         </div>
       </div>
     </div>
@@ -68,24 +68,24 @@ export function LoadingCard() {
 
 export function LoadingTable({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+    <div className="bg-card rounded-xl p-6 shadow-card border border-border">
       <div className="animate-pulse">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <div className="h-6 bg-gray-200 rounded w-32"></div>
-          <div className="h-10 bg-gray-200 rounded w-64"></div>
+          <div className="h-6 bg-accent rounded w-32"></div>
+          <div className="h-10 bg-accent rounded w-64"></div>
         </div>
-        
+
         {/* Table rows */}
         <div className="space-y-4">
           {Array.from({ length: rows }).map((_, i) => (
             <div key={i} className="grid grid-cols-6 gap-4">
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded"></div>
-              <div className="h-4 bg-gray-200 rounded w-16"></div>
+              <div className="h-4 bg-accent rounded"></div>
+              <div className="h-4 bg-accent rounded"></div>
+              <div className="h-4 bg-accent rounded"></div>
+              <div className="h-4 bg-accent rounded"></div>
+              <div className="h-4 bg-accent rounded"></div>
+              <div className="h-4 bg-accent rounded w-16"></div>
             </div>
           ))}
         </div>
