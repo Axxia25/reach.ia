@@ -86,7 +86,7 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+      <div className="bg-card rounded-xl p-6 shadow-card border border-border">
         <div className="flex justify-between items-center mb-6">
           <div className="h-6 bg-gray-200 rounded w-32 animate-pulse"></div>
           <div className="h-10 bg-gray-200 rounded w-64 animate-pulse"></div>
@@ -101,10 +101,10 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+    <div className="bg-card rounded-xl p-6 shadow-card border border-border">
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
-        <h3 className="text-xl font-semibold text-gray-900">
+        <h3 className="text-xl font-semibold text-card-foreground">
           Leads Recentes
         </h3>
         
@@ -113,7 +113,7 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as StatusType)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="px-3 py-2 border border-border rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-background"
           >
             <option value="todos">Todos Status</option>
             <option value="novo">Novos</option>
@@ -123,7 +123,7 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
           <select
             value={vendorFilter}
             onChange={(e) => setVendorFilter(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="px-3 py-2 border border-border rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-background"
           >
             <option value="todos">Todos Vendedores</option>
             {uniqueVendors.map(vendor => (
@@ -133,20 +133,20 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
 
           {/* Busca */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
             <input
               type="text"
               placeholder="Buscar por nome, telefone ou veículo..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg w-full sm:w-80 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="pl-10 pr-4 py-2 border border-border rounded-lg w-full sm:w-80 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-background"
             />
           </div>
         </div>
       </div>
 
       {/* Contador de resultados */}
-      <div className="mb-4 text-sm text-gray-500">
+      <div className="mb-4 text-sm text-muted-foreground">
         {filteredLeads.length} de {leads.length} leads
         {searchTerm && ` encontrados para "${searchTerm}"`}
       </div>
@@ -155,35 +155,35 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+            <tr className="border-b border-border">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4" />
                   Data/Hora
                 </div>
               </th>
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" />
                   Nome
                 </div>
               </th>
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 <div className="flex items-center gap-2">
                   <Phone className="w-4 h-4" />
                   Telefone
                 </div>
               </th>
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 <div className="flex items-center gap-2">
                   <Car className="w-4 h-4" />
                   Veículo
                 </div>
               </th>
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 Vendedor
               </th>
-              <th className="text-left py-3 px-2 font-semibold text-gray-600 text-sm">
+              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
                 Status
               </th>
             </tr>
@@ -191,20 +191,20 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
           <tbody>
             {filteredLeads.length > 0 ? (
               filteredLeads.map((lead) => (
-                <tr key={lead.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="py-3 px-2 text-sm text-gray-900">
+                <tr key={lead.id} className="border-b border-border hover:bg-accent transition-colors">
+                  <td className="py-3 px-2 text-sm text-card-foreground">
                     {formatDateTime(lead.timestamps)}
                   </td>
-                  <td className="py-3 px-2 text-sm font-medium text-gray-900">
+                  <td className="py-3 px-2 text-sm font-medium text-card-foreground">
                     {lead.nome}
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-600">
+                  <td className="py-3 px-2 text-sm text-muted-foreground">
                     {formatPhone(lead.telefone)}
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-600">
+                  <td className="py-3 px-2 text-sm text-muted-foreground">
                     {lead.veiculo || '-'}
                   </td>
-                  <td className="py-3 px-2 text-sm text-gray-600">
+                  <td className="py-3 px-2 text-sm text-muted-foreground">
                     {lead.vendedor || '-'}
                   </td>
                   <td className="py-3 px-2">
@@ -214,7 +214,7 @@ export default function LeadsTable({ leads, loading }: LeadsTableProps) {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="py-8 text-center text-gray-500">
+                <td colSpan={6} className="py-8 text-center text-muted-foreground">
                   {searchTerm || statusFilter !== 'todos' || vendorFilter !== 'todos' 
                     ? 'Nenhum lead encontrado com os filtros aplicados'
                     : 'Nenhum lead encontrado'
