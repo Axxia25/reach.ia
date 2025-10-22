@@ -19,7 +19,7 @@ interface VendorItemProps {
 function VendorItem({ vendor, vehicles, rank, loading }: VendorItemProps) {
   if (loading) {
     return (
-      <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+      <div className="flex justify-between items-center py-3 border-b border-border last:border-b-0">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
           <div>
@@ -47,16 +47,16 @@ function VendorItem({ vendor, vehicles, rank, loading }: VendorItemProps) {
   }
 
   return (
-    <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
+    <div className="flex justify-between items-center py-3 border-b border-border last:border-b-0">
       <div className="flex items-center space-x-3">
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-100">
+        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-accent">
           {getRankIcon(rank)}
         </div>
         <div>
-          <div className="font-medium text-gray-900">
+          <div className="font-medium text-card-foreground">
             {vendor.vendedor}
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-muted-foreground">
             {vehicles.length > 0 ? vehicles.slice(0, 2).join(', ') : 'Sem veículos'}
             {vehicles.length > 2 && ` +${vehicles.length - 2}`}
           </div>
@@ -82,7 +82,7 @@ export default function VendorsPanel({ vendorSummary, leads, loading }: VendorsP
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+      <div className="bg-card rounded-xl p-6 shadow-card border border-border">
         <div className="h-6 bg-gray-200 rounded w-32 mb-6 animate-pulse"></div>
         <div className="space-y-1">
           {[...Array(4)].map((_, i) => (
@@ -100,8 +100,8 @@ export default function VendorsPanel({ vendorSummary, leads, loading }: VendorsP
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">
+    <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+      <h3 className="text-xl font-semibold text-card-foreground mb-6">
         Top Vendedores
       </h3>
       
@@ -119,17 +119,17 @@ export default function VendorsPanel({ vendorSummary, leads, loading }: VendorsP
       ) : (
         <div className="text-center py-8">
           <User className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">Nenhum vendedor encontrado</p>
+          <p className="text-muted-foreground">Nenhum vendedor encontrado</p>
         </div>
       )}
       
       {topVendors.length > 0 && (
-        <div className="mt-6 pt-4 border-t border-gray-100">
-          <div className="flex justify-between text-sm text-gray-500">
+        <div className="mt-6 pt-4 border-t border-border">
+          <div className="flex justify-between text-sm text-muted-foreground">
             <span>Total vendedores:</span>
             <span className="font-medium">{vendorSummary.length}</span>
           </div>
-          <div className="flex justify-between text-sm text-gray-500 mt-1">
+          <div className="flex justify-between text-sm text-muted-foreground mt-1">
             <span>Total leads:</span>
             <span className="font-medium">
               {vendorSummary.reduce((sum, v) => sum + v.total_leads, 0)}
