@@ -29,11 +29,11 @@ function MetricCard({ value, label, trend, loading }: MetricCardProps) {
   
   if (loading) {
     return (
-      <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100">
+      <div className="bg-card rounded-xl p-6 shadow-card border border-border">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-24 mb-2"></div>
-          <div className="h-4 bg-gray-200 rounded w-32"></div>
+          <div className="h-8 bg-accent rounded w-16 mb-2"></div>
+          <div className="h-4 bg-accent rounded w-24 mb-2"></div>
+          <div className="h-4 bg-accent rounded w-32"></div>
         </div>
       </div>
     )
@@ -46,20 +46,20 @@ function MetricCard({ value, label, trend, loading }: MetricCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl p-6 shadow-card border border-gray-100 hover:shadow-card-hover transition-shadow">
+    <div className="bg-card rounded-xl p-6 shadow-card border border-border hover:shadow-card-hover transition-shadow">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="text-3xl font-bold text-gray-900 mb-1">
+          <div className="text-3xl font-bold text-card-foreground mb-1">
             {typeof value === 'number' ? value.toLocaleString('pt-BR') : value}
           </div>
-          <div className="text-gray-500 font-medium mb-2">
+          <div className="text-muted-foreground font-medium mb-2">
             {label}
           </div>
           <div className={`flex items-center text-sm font-semibold ${
-            isNeutral 
-              ? 'text-gray-500' 
-              : isPositive 
-                ? 'text-success-600' 
+            isNeutral
+              ? 'text-muted-foreground'
+              : isPositive
+                ? 'text-success-600'
                 : 'text-danger-600'
           }`}>
             {!isNeutral && (
