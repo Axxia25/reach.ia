@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   env: {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -10,11 +7,9 @@ const nextConfig = {
   images: {
     domains: [],
   },
-  // Optimização para build
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Headers de segurança
   async headers() {
     return [
       {
@@ -36,9 +31,9 @@ const nextConfig = {
       },
     ];
   },
-  // Configurações para Netlify
   trailingSlash: false,
-  output: 'standalone',
+  // Só usar export em produção para o Netlify
+  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
 }
 
 module.exports = nextConfig

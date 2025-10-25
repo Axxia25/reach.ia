@@ -36,94 +36,117 @@ export function useLeads(period: number = 7): UseLeadsReturn {
     try {
       setLoading(true)
       setError(null)
+      console.log('🔍 Iniciando busca de dados...')
 
       const startDate = subDays(new Date(), period)
-      const previousStartDate = subDays(new Date(), period * 2)
+      console.log('📅 Período:', `${period} dias atrás = ${startDate.toISOString()}`)
       
-      // Buscar leads do período atual
-      const { data: currentLeads, error: leadsError } = await supabase
+      // 1. Buscar todos os leads (sem filtro de data primeiro para debug)
+      console.log('🔍 Buscando todos os leads...')
+      const { data: allLeads, error: allLeadsError } = await supabase
         .from('leads')
         .select('*')
-        .gte('timestamps', startDate.toISOString())
         .order('timestamps', { ascending: false })
 
-      if (leadsError) throw leadsError
+      if (allLeadsError) {
+        console.error('❌ Erro ao buscar todos os leads:', allLeadsError)
+        throw allLeadsError
+      }
 
-      // Buscar leads do período anterior para comparação
-      const { data: previousLeads, error: prevError } = await supabase
-        .from('leads')
-        .select('*')
-        .gte('timestamps', previousStartDate.toISOString())
-        .lt('timestamps', startDate.toISOString())
+      console.log('✅ Total de leads na base:', allLeads?.length || 0)
 
-      if (prevError) throw prevError
+      // 2. Filtrar leads do período no frontend (para debug)
+      const currentLeads = allLeads?.filter(lead => {
+        const leadDate = parseISO(lead.timestamps)
+        return leadDate >= startDate
+      }) || []
 
-      // Buscar resumo diário
+      console.log('✅ Leads no período selecionado:', currentLeads.length)
+
+      // 3. Buscar resumo diário
+      console.log('🔍 Buscando resumo diário...')
       const { data: dailyData, error: dailyError } = await supabase
         .from('leads_daily_summary')
         .select('*')
         .gte('data', format(startDate, 'yyyy-MM-dd'))
         .order('data', { ascending: false })
 
-      if (dailyError) throw dailyError
+      if (dailyError) {
+        console.warn('⚠️ Erro ao buscar resumo diário (continuando):', dailyError)
+      }
 
-      // Buscar resumo por vendedor
+      console.log('✅ Resumo diário:', dailyData?.length || 0, 'registros')
+
+      // 4. Buscar resumo por vendedor
+      console.log('🔍 Buscando resumo por vendedor...')
       const { data: vendorData, error: vendorError } = await supabase
         .from('leads_por_vendedor')
         .select('*')
         .order('total_leads', { ascending: false })
 
-      if (vendorError) throw vendorError
+      if (vendorError) {
+        console.warn('⚠️ Erro ao buscar resumo vendedor (continuando):', vendorError)
+      }
 
-      setLeads(currentLeads || [])
+      console.log('✅ Resumo vendedor:', vendorData?.length || 0, 'registros')
+
+      // 5. Atualizar estado
+      setLeads(currentLeads)
       setDailySummary(dailyData || [])
       setVendorSummary(vendorData || [])
 
+      console.log('✅ Dados atualizados no estado')
+
     } catch (err: any) {
+      console.error('❌ Erro geral:', err)
       setError(err.message)
     } finally {
       setLoading(false)
     }
   }
 
-  // Calcular métricas
+  // Calcular métricas com logs detalhados
   const calculateMetrics = () => {
-    const currentLeads = leads
-    const startDate = subDays(new Date(), period)
-    const previousStartDate = subDays(new Date(), period * 2)
+    console.log('🧮 Calculando métricas...')
+    console.log('📊 Leads disponíveis:', leads.length)
     
-    // Métricas atuais
-    const totalLeads = currentLeads.length
-    const activeVendors = new Set(currentLeads.filter(l => l.vendedor).map(l => l.vendedor)).size
-    const uniqueVehicles = new Set(currentLeads.filter(l => l.veiculo).map(l => l.veiculo)).size
-    const avgLeadsPerDay = totalLeads / period
+    // Métricas básicas
+    const totalLeads = leads.length
+    
+    // Vendedores ativos (filtrando valores nulos/vazios)
+    const vendedoresComNome = leads.filter(l => l.vendedor && l.vendedor.trim() !== '')
+    const activeVendors = new Set(vendedoresComNome.map(l => l.vendedor)).size
+    
+    // Veículos únicos (filtrando valores nulos/vazios)
+    const veiculosComNome = leads.filter(l => l.veiculo && l.veiculo.trim() !== '')
+    const uniqueVehicles = new Set(veiculosComNome.map(l => l.veiculo)).size
+    
+    // Média por dia
+    const avgLeadsPerDay = period > 0 ? Number((totalLeads / period).toFixed(1)) : 0
 
-    // Para comparação, vamos usar uma estimativa baseada nos dados que temos
-    // Em um cenário real, você faria outra query para o período anterior
-    const previousTotal = Math.round(totalLeads * 0.9) // Simulando crescimento de 10%
-    const previousVendors = Math.round(activeVendors * 0.8) // Simulando crescimento
-    const previousVehicles = Math.round(uniqueVehicles * 1.1) // Simulando decréscimo
-    const previousAvg = previousTotal / period
+    // Trends simulados (em uma implementação real, você buscaria dados do período anterior)
+    const leadsTrend = totalLeads > 0 ? 10.5 : 0  // Simulando crescimento de 10.5%
+    const vendorsTrend = activeVendors > 0 ? 5.2 : 0  // Simulando crescimento
+    const vehiclesTrend = uniqueVehicles > 0 ? -2.1 : 0  // Simulando decréscimo
+    const avgTrend = avgLeadsPerDay > 0 ? 8.3 : 0  // Simulando crescimento
 
-    // Calcular tendências (percentual de mudança)
-    const leadsTrend = previousTotal > 0 ? ((totalLeads - previousTotal) / previousTotal) * 100 : 0
-    const vendorsTrend = previousVendors > 0 ? ((activeVendors - previousVendors) / previousVendors) * 100 : 0
-    const vehiclesTrend = previousVehicles > 0 ? ((uniqueVehicles - previousVehicles) / previousVehicles) * 100 : 0
-    const avgTrend = previousAvg > 0 ? ((avgLeadsPerDay - previousAvg) / previousAvg) * 100 : 0
-
-    return {
+    const metrics = {
       totalLeads,
       activeVendors,
       uniqueVehicles,
-      avgLeadsPerDay: Number(avgLeadsPerDay.toFixed(1)),
-      leadsTrend: Number(leadsTrend.toFixed(1)),
-      vendorsTrend: Number(vendorsTrend.toFixed(1)),
-      vehiclesTrend: Number(vehiclesTrend.toFixed(1)),
-      avgTrend: Number(avgTrend.toFixed(1))
+      avgLeadsPerDay,
+      leadsTrend,
+      vendorsTrend,
+      vehiclesTrend,
+      avgTrend
     }
+
+    console.log('📊 Métricas calculadas:', metrics)
+    return metrics
   }
 
   useEffect(() => {
+    console.log('🚀 useLeads effect triggered, period:', period)
     fetchData()
 
     // Configurar realtime subscription
@@ -136,23 +159,29 @@ export function useLeads(period: number = 7): UseLeadsReturn {
           schema: 'public',
           table: 'leads'
         },
-        () => {
+        (payload) => {
+          console.log('🔴 Realtime update received:', payload)
           // Refetch data when changes occur
           fetchData()
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        console.log('🔴 Realtime subscription status:', status)
+      })
 
     return () => {
+      console.log('🔄 Cleaning up realtime subscription')
       supabase.removeChannel(channel)
     }
   }, [period])
+
+  const metrics = calculateMetrics()
 
   return {
     leads,
     dailySummary,
     vendorSummary,
-    metrics: calculateMetrics(),
+    metrics,
     loading,
     error,
     refetch: fetchData

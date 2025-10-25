@@ -1,13 +1,37 @@
 import { createClient } from '@supabase/supabase-js'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Verificar se as variáveis de ambiente estão definidas
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('❌ Variáveis de ambiente do Supabase não configuradas!')
+  console.error('NEXT_PUBLIC_SUPABASE_URL:', !!supabaseUrl)
+  console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY:', !!supabaseAnonKey)
+}
 
-// Client component helper
-export const createSupabaseClient = () => createClientComponentClient()
+// Cliente principal do Supabase
+export const supabase = createClient(supabaseUrl!, supabaseAnonKey!)
+
+// Cliente para componentes (recomendado para Next.js 13+)
+export const createSupabaseClient = () => {
+  const client = createClientComponentClient()
+  
+  // Debug: Verificar se o cliente foi criado
+  console.log('✅ Cliente Supabase criado:', {
+    url: client.supabaseUrl,
+    hasAuth: !!client.auth
+  })
+  
+  return client
+}
+
+// Disponibilizar globalmente para debug (apenas em desenvolvimento)
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  (window as any).supabase = supabase
+  console.log('🔧 Cliente Supabase disponível globalmente como window.supabase')
+}
 
 // Database types
 export type Database = {

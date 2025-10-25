@@ -6,7 +6,11 @@ interface UseResponsiveReturn {
   isMobile: boolean
   isTablet: boolean
   isDesktop: boolean
-  screenSize: 'mobile' | 'tablet' | 'desktop'
+  isXL: boolean
+  is2XL: boolean
+  is3XL: boolean
+  is4XL: boolean
+  screenSize: 'mobile' | 'tablet' | 'desktop' | 'xl' | '2xl' | '3xl' | '4xl'
   width: number
   height: number
 }
@@ -40,14 +44,27 @@ export function useResponsive(): UseResponsiveReturn {
   // Tailwind breakpoints
   const isMobile = width < 768
   const isTablet = width >= 768 && width < 1024
-  const isDesktop = width >= 1024
+  const isDesktop = width >= 1024 && width < 1280
+  const isXL = width >= 1280 && width < 1536
+  const is2XL = width >= 1536 && width < 1920
+  const is3XL = width >= 1920 && width < 2560
+  const is4XL = width >= 2560
 
-  const screenSize = isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop'
+  const screenSize = is4XL ? '4xl' : 
+                    is3XL ? '3xl' : 
+                    is2XL ? '2xl' : 
+                    isXL ? 'xl' : 
+                    isDesktop ? 'desktop' : 
+                    isTablet ? 'tablet' : 'mobile'
 
-  return {
+    return {
     isMobile,
     isTablet,
     isDesktop,
+    isXL,
+    is2XL,
+    is3XL,
+    is4XL,
     screenSize,
     width,
     height,
