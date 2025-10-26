@@ -20,8 +20,9 @@ export default function VendedorPage() {
   const [leadStatuses, setLeadStatuses] = useState<Record<number, { status: string, valor: number }>>({})
   const [isMetaModalOpen, setIsMetaModalOpen] = useState(false)
   const [vendedorMeta, setVendedorMeta] = useState<{valor: number, quantidade: number} | null>(null)
+  const [isActiveInQueue, setIsActiveInQueue] = useState(true) // Estado para controle da fila
   const supabase = createSupabaseClient()
-  
+
   // Decodificar nome do vendedor da URL
   const vendedorNome = decodeURIComponent(params.nome as string)
   
@@ -88,6 +89,12 @@ export default function VendedorPage() {
     router.push('/dashboard')
   }
 
+  const handleToggleQueue = () => {
+    setIsActiveInQueue(!isActiveInQueue)
+    // TODO: Futuramente, sincronizar com a tabela de roleta no banco de dados
+    console.log(`${vendedorNome} ${!isActiveInQueue ? 'ativado' : 'desativado'} na fila de distribuição`)
+  }
+
   const periodOptions = [
     { value: 7, label: 'Últimos 7 dias' },
     { value: 30, label: 'Últimos 30 dias' },
@@ -142,10 +149,10 @@ export default function VendedorPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-card shadow-sm border-b border-border">
+      <header className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-0 sm:h-16 gap-3 sm:gap-0">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               {/* Botão voltar */}
               <button
                 onClick={handleBackToDashboard}
@@ -154,25 +161,50 @@ export default function VendedorPage() {
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  Dashboard - {vendedorNome}
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Gestão pessoal de leads e metas
-                </p>
+
+              <div className="flex items-center gap-3">
+                <div>
+                  <h1 className="text-lg sm:text-2xl font-bold text-foreground">
+                    Dashboard - {vendedorNome}
+                  </h1>
+                  <p className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
+                    Gestão pessoal de leads e metas
+                  </p>
+                </div>
+
+                {/* Toggle de Status na Fila - Discreto */}
+                <div className="flex items-center gap-2 ml-2">
+                  <button
+                    onClick={handleToggleQueue}
+                    className={`relative inline-flex h-5 w-9 sm:h-6 sm:w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
+                      isActiveInQueue ? 'bg-success-500' : 'bg-muted'
+                    }`}
+                    aria-label={`${isActiveInQueue ? 'Desativar' : 'Ativar'} na fila de distribuição`}
+                    title={isActiveInQueue ? 'Ativo na fila de distribuição' : 'Inativo na fila de distribuição'}
+                  >
+                    <span
+                      className={`inline-block h-3 w-3 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform ${
+                        isActiveInQueue ? 'translate-x-5 sm:translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className={`text-xs hidden md:inline ${
+                    isActiveInQueue ? 'text-success-600' : 'text-muted-foreground'
+                  }`}>
+                    {isActiveInQueue ? 'Ativo' : 'Inativo'}
+                  </span>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center space-x-4">
+
+            <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-4">
               {/* Seletor de período */}
               <div className="flex items-center space-x-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
+                <Calendar className="w-4 h-4 text-muted-foreground hidden sm:block" />
                 <select
                   value={period}
                   onChange={(e) => setPeriod(Number(e.target.value))}
-                  className="border border-border rounded-lg px-3 py-2 text-sm bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
+                  className="border border-border rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent"
                 >
                   {periodOptions.map(option => (
                     <option key={option.value} value={option.value}>
@@ -183,8 +215,8 @@ export default function VendedorPage() {
               </div>
 
               {/* User info e logout */}
-              <div className="flex items-center space-x-3">
-                <div className="text-sm">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="text-xs sm:text-sm hidden md:block">
                   <div className="font-medium text-foreground">
                     {user.email}
                   </div>
@@ -221,43 +253,43 @@ export default function VendedorPage() {
         )}
 
         {/* Cards de métricas personalizadas */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Meus Leads */}
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+          <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-card-foreground mb-1">
+                <div className="text-2xl sm:text-3xl font-bold text-card-foreground mb-1">
                   {vendedorMetrics.totalLeads}
                 </div>
-                <div className="text-muted-foreground font-medium mb-2">
+                <div className="text-sm sm:text-base text-muted-foreground font-medium mb-1 sm:mb-2">
                   Meus Leads
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   Últimos {period} dias
                 </div>
               </div>
-              <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
-                <Target className="w-6 h-6 text-primary-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary-500" />
               </div>
             </div>
           </div>
 
           {/* Veículos Únicos */}
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+          <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-card-foreground mb-1">
+                <div className="text-2xl sm:text-3xl font-bold text-card-foreground mb-1">
                   {vendedorMetrics.uniqueVehicles}
                 </div>
-                <div className="text-muted-foreground font-medium mb-2">
+                <div className="text-sm sm:text-base text-muted-foreground font-medium mb-1 sm:mb-2">
                   Veículos Únicos
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   Modelos consultados
                 </div>
               </div>
-              <div className="w-12 h-12 bg-secondary-100 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-secondary-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-secondary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-secondary-500" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                 </svg>
               </div>
@@ -265,131 +297,131 @@ export default function VendedorPage() {
           </div>
 
           {/* Meta Mensal */}
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+          <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-card-foreground mb-1">
-                  {vendedorMeta ? 
+                <div className="text-xl sm:text-3xl font-bold text-card-foreground mb-1">
+                  {vendedorMeta ?
                     new Intl.NumberFormat('pt-BR', {
                       style: 'currency',
                       currency: 'BRL'
-                    }).format(vendedorMeta.valor) 
+                    }).format(vendedorMeta.valor)
                     : '--'
                   }
                 </div>
-                <div className="text-muted-foreground font-medium mb-2">
+                <div className="text-sm sm:text-base text-muted-foreground font-medium mb-1 sm:mb-2">
                   Meta Mensal
                 </div>
-                <div className="text-sm text-warning-600 font-medium">
+                <div className="text-xs sm:text-sm text-warning-600 font-medium">
                   Configurar meta
                 </div>
               </div>
-              <div className="w-12 h-12 bg-warning-100 rounded-xl flex items-center justify-center">
-                <Target className="w-6 h-6 text-warning-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-warning-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Target className="w-5 h-5 sm:w-6 sm:h-6 text-warning-500" />
               </div>
             </div>
           </div>
 
           {/* Valor Vendido */}
-          <div className="bg-card rounded-xl p-6 shadow-card border border-border">
+          <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card border border-border">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold text-card-foreground mb-1">
+                <div className="text-xl sm:text-3xl font-bold text-card-foreground mb-1">
                   {new Intl.NumberFormat('pt-BR', {
                     style: 'currency',
                     currency: 'BRL'
                   }).format(statusMetrics.valorTotal)}
                 </div>
-                <div className="text-muted-foreground font-medium mb-2">
+                <div className="text-sm sm:text-base text-muted-foreground font-medium mb-1 sm:mb-2">
                   Valor Vendido
                 </div>
-                <div className="text-sm text-muted-foreground">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   Período atual
                 </div>
               </div>
-              <div className="w-12 h-12 bg-success-100 rounded-xl flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-success-500" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-success-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                <DollarSign className="w-5 h-5 sm:w-6 sm:h-6 text-success-500" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Gráfico dos Meus Leads */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           <div className="lg:col-span-2">
-            <LeadsChart 
-              leads={vendedorLeads} 
+            <LeadsChart
+              leads={vendedorLeads}
               dailySummary={[]} // Será calculado baseado nos leads filtrados
-              period={period} 
-              loading={loading} 
+              period={period}
+              loading={loading}
             />
           </div>
-          
+
           {/* Painel de Performance */}
           <div className="lg:col-span-1">
-            <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-              <h3 className="text-xl font-semibold text-card-foreground mb-6">
+            <div className="bg-card rounded-xl p-4 sm:p-6 shadow-card border border-border">
+              <h3 className="text-lg sm:text-xl font-semibold text-card-foreground mb-4 sm:mb-6">
                 Minha Performance
               </h3>
-              
-              <div className="space-y-4">
+
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Taxa de Conversão</span>
-                  <span className="font-semibold text-card-foreground">{statusMetrics.taxaConversao}%</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Leads/Dia Média</span>
-                  <span className="font-semibold text-card-foreground">{vendedorMetrics.avgLeadsPerDay}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Negócios Fechados</span>
-                  <span className="font-semibold text-success-600">{statusMetrics.fechados}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Em Andamento</span>
-                  <span className="font-semibold text-warning-600">{statusMetrics.andamento}</span>
-                </div>
-                
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Perdidos</span>
-                  <span className="font-semibold text-danger-600">{statusMetrics.perdidos}</span>
-                </div>
-              </div>
-              
-                <div className="pt-4 border-t border-border">
-                  <div className="flex justify-between items-center">
-                    <span className="text-muted-foreground font-medium">Valor Total Vendido</span>
-                    <span className="font-bold text-success-600">
-                      {new Intl.NumberFormat('pt-BR', {
-                        style: 'currency',
-                        currency: 'BRL'
-                      }).format(statusMetrics.valorTotal)}
-                    </span>
-                  </div>
+                  <span className="text-xs sm:text-sm text-muted-foreground">Taxa de Conversão</span>
+                  <span className="text-sm sm:text-base font-semibold text-card-foreground">{statusMetrics.taxaConversao}%</span>
                 </div>
 
-              <div className="mt-6 pt-4 border-t border-border">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Leads/Dia Média</span>
+                  <span className="text-sm sm:text-base font-semibold text-card-foreground">{vendedorMetrics.avgLeadsPerDay}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Negócios Fechados</span>
+                  <span className="text-sm sm:text-base font-semibold text-success-600">{statusMetrics.fechados}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Em Andamento</span>
+                  <span className="text-sm sm:text-base font-semibold text-warning-600">{statusMetrics.andamento}</span>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground">Perdidos</span>
+                  <span className="text-sm sm:text-base font-semibold text-danger-600">{statusMetrics.perdidos}</span>
+                </div>
+              </div>
+
+              <div className="pt-3 sm:pt-4 mt-3 sm:mt-4 border-t border-border">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs sm:text-sm text-muted-foreground font-medium">Valor Total Vendido</span>
+                  <span className="text-sm sm:text-base font-bold text-success-600">
+                    {new Intl.NumberFormat('pt-BR', {
+                      style: 'currency',
+                      currency: 'BRL'
+                    }).format(statusMetrics.valorTotal)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-border">
                 <button
                   onClick={handleMetaModalOpen}
-                  className="w-full bg-primary-500 text-white py-2 px-4 rounded-lg font-medium hover:bg-primary-600 transition-colors"
+                  className="w-full bg-primary-500 text-white py-2 px-4 rounded-lg text-sm sm:text-base font-medium hover:bg-primary-600 transition-colors"
                 >
                   Configurar Meta Mensal
                 </button>
               </div>
             </div>
           </div>
-        </div>                
+        </div>
 
         {/* Tabela de Meus Leads */}
-        <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-card-foreground">
+        <div>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4 px-4 sm:px-0">
+            <h3 className="text-lg sm:text-xl font-semibold text-card-foreground">
               Meus Leads ({vendedorMetrics.totalLeads})
             </h3>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-foreground">
               Clique em um lead para gerenciar status
             </div>
           </div>

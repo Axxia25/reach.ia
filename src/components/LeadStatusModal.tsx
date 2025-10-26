@@ -158,19 +158,19 @@ export default function LeadStatusModal({ lead, isOpen, onClose, onSave }: LeadS
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Overlay */}
-      <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose} />
-      
+      <div className="fixed inset-0 bg-black/50 dark:bg-black/70 transition-opacity" onClick={onClose} />
+
       {/* Modal */}
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl">
+        <div className="relative w-full max-w-md bg-card rounded-2xl shadow-xl border border-border">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900">
+          <div className="flex items-center justify-between p-6 border-b border-border">
+            <h3 className="text-lg font-semibold text-card-foreground">
               Gerenciar Status do Lead
             </h3>
             <button
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 text-muted-foreground hover:text-card-foreground hover:bg-accent rounded-lg transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -179,9 +179,9 @@ export default function LeadStatusModal({ lead, isOpen, onClose, onSave }: LeadS
           {/* Content */}
           <div className="p-6">
             {/* Informações do Lead */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <h4 className="font-medium text-gray-900 mb-2">{lead.nome}</h4>
-              <div className="space-y-1 text-sm text-gray-600">
+            <div className="bg-accent rounded-lg p-4 mb-6 border border-border">
+              <h4 className="font-medium text-card-foreground mb-2">{lead.nome}</h4>
+              <div className="space-y-1 text-sm text-muted-foreground">
                 <div>📞 {formatPhone(lead.telefone)}</div>
                 <div>🚗 {lead.veiculo || 'Não informado'}</div>
                 <div>📅 {formatDateTime(lead.timestamps)}</div>
@@ -190,17 +190,17 @@ export default function LeadStatusModal({ lead, isOpen, onClose, onSave }: LeadS
 
             {/* Seletor de Status */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-card-foreground mb-3">
                 Status do Negócio
               </label>
               <div className="space-y-3">
                 {(['fechado', 'perdido', 'andamento'] as StatusType[]).map((statusOption) => (
                   <label
                     key={statusOption}
-                    className={`flex items-center p-3 border rounded-lg cursor-pointer transition-all ${
+                    className={`flex items-center p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       status === statusOption
-                        ? getStatusColor(statusOption)
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? getStatusColor(statusOption) + ' dark:opacity-90'
+                        : 'border-border bg-card hover:border-muted-foreground/30 hover:bg-accent'
                     }`}
                   >
                     <input
@@ -234,21 +234,21 @@ export default function LeadStatusModal({ lead, isOpen, onClose, onSave }: LeadS
             {/* Campo Valor (apenas para negócios fechados ou em andamento) */}
             {(status === 'fechado' || status === 'andamento') && (
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-card-foreground mb-2">
                   {status === 'fechado' ? 'Valor da Venda' : 'Valor Estimado'}
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                   <input
                     type="text"
                     value={valor}
                     onChange={handleValorChange}
                     placeholder="R$ 0,00"
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
+                    className="w-full pl-10 pr-4 py-3 border-2 border-border bg-card text-card-foreground rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-all placeholder:text-muted-foreground"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  {status === 'fechado' 
+                <p className="text-xs text-muted-foreground mt-1">
+                  {status === 'fechado'
                     ? 'Informe o valor final da venda realizada'
                     : 'Valor estimado para este negócio'
                   }
@@ -258,18 +258,18 @@ export default function LeadStatusModal({ lead, isOpen, onClose, onSave }: LeadS
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-end space-x-3 p-6 border-t border-gray-200">
+          <div className="flex items-center justify-end space-x-3 p-6 border-t border-border">
             <button
               onClick={onClose}
               disabled={loading}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-card-foreground bg-card border-2 border-border rounded-lg hover:bg-accent transition-colors disabled:opacity-50 font-medium"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
               disabled={loading}
-              className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 flex items-center space-x-2"
+              className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors disabled:opacity-50 flex items-center space-x-2 font-medium shadow-sm"
             >
               {loading && (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />

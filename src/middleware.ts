@@ -1,10 +1,77 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+import { authRateLimit, apiRateLimit, writeRateLimit, getClientIp, getRateLimitHeaders } from '@/lib/rate-limit'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
+
+  // Get client IP for rate limiting
+  const clientIp = getClientIp(req.headers)
+
+  // Apply rate limiting based on route type
+  const pathname = req.nextUrl.pathname
+
+  // Authentication routes - strict rate limiting
+  if (pathname === '/' || pathname.startsWith('/api/auth')) {
+    const result = authRateLimit(clientIp)
+    if (!result.success) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Too many requests. Please try again later.',
+          reset: new Date(result.reset).toISOString()
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getRateLimitHeaders(result)
+          }
+        }
+      )
+    }
+  }
+
+  // API routes with write operations - moderate rate limiting
+  if (pathname.startsWith('/api') && (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE')) {
+    const result = writeRateLimit(clientIp)
+    if (!result.success) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Too many requests. Please slow down.',
+          reset: new Date(result.reset).toISOString()
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getRateLimitHeaders(result)
+          }
+        }
+      )
+    }
+  }
+
+  // General API routes - standard rate limiting
+  if (pathname.startsWith('/api')) {
+    const result = apiRateLimit(clientIp)
+    if (!result.success) {
+      return new NextResponse(
+        JSON.stringify({
+          error: 'Too many requests. Please slow down.',
+          reset: new Date(result.reset).toISOString()
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            ...getRateLimitHeaders(result)
+          }
+        }
+      )
+    }
+  }
 
   // Refresh session if expired - required for Server Components
   const {

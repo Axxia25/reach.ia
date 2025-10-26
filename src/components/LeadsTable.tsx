@@ -118,141 +118,145 @@ export default function LeadsTable({
   }
 
   return (
-    <div className="bg-card rounded-xl p-6 shadow-card border border-border">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 mb-6">
-        <h3 className="text-xl font-semibold text-card-foreground">
-          Leads Recentes
-        </h3>
+    <div className="bg-card rounded-xl shadow-card border border-border">
+      {/* Header com filtros - fixo */}
+      <div className="p-4 sm:p-6 border-b border-border">
+        <div className="flex flex-col gap-4">
+          {/* Filtros responsivos */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Filtro de Status */}
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusType)}
+              className="px-3 py-2 border border-border bg-card text-card-foreground rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="todos">Todos Status</option>
+              <option value="novo">Novos</option>
+              <option value="contato">Em Contato</option>
+            </select>
 
-        <div className="flex flex-col sm:flex-row gap-3">
-          {/* Filtros */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as StatusType)}
-            className="px-3 py-2 border border-border bg-card text-card-foreground rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option value="todos">Todos Status</option>
-            <option value="novo">Novos</option>
-            <option value="contato">Em Contato</option>
-          </select>
+            {/* Filtro de Vendedor */}
+            <select
+              value={vendorFilter}
+              onChange={(e) => setVendorFilter(e.target.value)}
+              className="px-3 py-2 border border-border bg-card text-card-foreground rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="todos">Todos Vendedores</option>
+              {uniqueVendors.map((vendor) => (
+                <option key={vendor} value={vendor}>
+                  {vendor}
+                </option>
+              ))}
+            </select>
 
-          <select
-            value={vendorFilter}
-            onChange={(e) => setVendorFilter(e.target.value)}
-            className="px-3 py-2 border border-border bg-card text-card-foreground rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-          >
-            <option value="todos">Todos Vendedores</option>
-            {uniqueVendors.map((vendor) => (
-              <option key={vendor} value={vendor}>
-                {vendor}
-              </option>
-            ))}
-          </select>
+            {/* Busca */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <input
+                type="text"
+                placeholder="Buscar por nome, telefone ou veículo..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-4 py-2 border border-border bg-card text-card-foreground placeholder:text-muted-foreground rounded-lg w-full text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+            </div>
+          </div>
 
-          {/* Busca */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Buscar por nome, telefone ou veículo..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 pr-4 py-2 border border-border bg-card text-card-foreground placeholder:text-muted-foreground rounded-lg w-full sm:w-80 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-            />
+          {/* Contador de resultados */}
+          <div className="text-sm text-muted-foreground">
+            {filteredLeads.length} de {leads.length} leads
+            {searchTerm && ` encontrados para "${searchTerm}"`}
           </div>
         </div>
       </div>
 
-      {/* Contador de resultados */}
-      <div className="mb-4 text-sm text-muted-foreground">
-        {filteredLeads.length} de {leads.length} leads
-        {searchTerm && ` encontrados para "${searchTerm}"`}
-      </div>
-
-      {/* Tabela */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  Data/Hora
-                </div>
-              </th>
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  Nome
-                </div>
-              </th>
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  Telefone
-                </div>
-              </th>
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                <div className="flex items-center gap-2">
-                  <Car className="w-4 h-4" />
-                  Veículo
-                </div>
-              </th>
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                Vendedor
-              </th>
-              <th className="text-left py-3 px-2 font-semibold text-muted-foreground text-sm">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredLeads.length > 0 ? (
-              filteredLeads.map((lead) => (
-                <tr
-                  key={lead.id}
-                  className={`border-b border-border transition-colors ${
-                    onLeadClick
-                      ? "hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer"
-                      : "hover:bg-accent"
-                  }`}
-                  onClick={() => onLeadClick?.(lead)}
-                >
-                  <td className="py-3 px-2 text-sm text-card-foreground">
-                    {formatDateTime(lead.timestamps)}
-                  </td>
-                  <td className="py-3 px-2 text-sm font-medium text-card-foreground">
-                    {lead.nome}
-                  </td>
-                  <td className="py-3 px-2 text-sm text-muted-foreground">
-                    {formatPhone(lead.telefone)}
-                  </td>
-                  <td className="py-3 px-2 text-sm text-muted-foreground">
-                    {lead.veiculo || "-"}
-                  </td>
-                  <td className="py-3 px-2 text-sm text-muted-foreground">
-                    {lead.vendedor || "-"}
-                  </td>
-                  <td className="py-3 px-2">{getStatusBadge(lead)}</td>
-                </tr>
-              ))
-            ) : (
+      {/* Tabela com scroll independente */}
+      <div className="overflow-auto" style={{ maxHeight: '500px' }}>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="sticky top-0 bg-card border-b border-border z-10">
               <tr>
-                <td
-                  colSpan={6}
-                  className="py-8 text-center text-muted-foreground"
-                >
-                  {searchTerm ||
-                  statusFilter !== "todos" ||
-                  vendorFilter !== "todos"
-                    ? "Nenhum lead encontrado com os filtros aplicados"
-                    : "Nenhum lead encontrado"}
-                </td>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
+                    <span className="hidden sm:inline">Data/Hora</span>
+                    <span className="sm:hidden">Data</span>
+                  </div>
+                </th>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card">
+                  <div className="flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Nome
+                  </div>
+                </th>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    <span className="hidden md:inline">Telefone</span>
+                    <span className="md:hidden">Tel.</span>
+                  </div>
+                </th>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card hidden lg:table-cell">
+                  <div className="flex items-center gap-2">
+                    <Car className="w-4 h-4" />
+                    Veículo
+                  </div>
+                </th>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card hidden xl:table-cell">
+                  Vendedor
+                </th>
+                <th className="text-left py-3 px-3 sm:px-4 font-semibold text-muted-foreground text-sm bg-card">
+                  Status
+                </th>
               </tr>
-            )}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredLeads.length > 0 ? (
+                filteredLeads.map((lead) => (
+                  <tr
+                    key={lead.id}
+                    className={`border-b border-border transition-colors ${
+                      onLeadClick
+                        ? "hover:bg-blue-50 dark:hover:bg-blue-900/20 cursor-pointer"
+                        : "hover:bg-accent"
+                    }`}
+                    onClick={() => onLeadClick?.(lead)}
+                  >
+                    <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-card-foreground whitespace-nowrap">
+                      {formatDateTime(lead.timestamps)}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm font-medium text-card-foreground">
+                      {lead.nome}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
+                      {formatPhone(lead.telefone)}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-muted-foreground hidden lg:table-cell">
+                      {lead.veiculo || "-"}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4 text-xs sm:text-sm text-muted-foreground hidden xl:table-cell">
+                      {lead.vendedor || "-"}
+                    </td>
+                    <td className="py-3 px-3 sm:px-4">{getStatusBadge(lead)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={6}
+                    className="py-8 text-center text-muted-foreground text-sm"
+                  >
+                    {searchTerm ||
+                    statusFilter !== "todos" ||
+                    vendorFilter !== "todos"
+                      ? "Nenhum lead encontrado com os filtros aplicados"
+                      : "Nenhum lead encontrado"}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

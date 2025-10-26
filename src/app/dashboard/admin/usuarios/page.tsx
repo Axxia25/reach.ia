@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useAdminActions } from '@/hooks/useAdminActions'
@@ -154,11 +155,9 @@ export default function AdminUsersPage() {
     users,
     vendedoresFromLeads,
     loading,
-    error,
     fetchUsers,
     fetchVendedoresFromLeads,
     inviteUser,
-    updateUserRole,
     toggleUserStatus,
     deleteUser
   } = useAdminActions()

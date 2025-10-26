@@ -1,12 +1,8 @@
 "use client";
 
-import ConversionMetrics from "@/components/ConversionMetrics";
-import FilaComercial from "@/components/FilaComercial";
 import FunnelChart from "@/components/FunnelChart";
-import LeadsTable from "@/components/LeadsTable";
 import MetricsCards from "@/components/MetricsCards";
 import Sidebar from "@/components/Sidebar";
-import TopVeiculos from "@/components/TopVeiculos";
 import { useLeads } from "@/hooks/useLeads";
 import { createSupabaseClient } from "@/lib/supabase";
 import { Calendar, RefreshCw } from "lucide-react";
@@ -21,8 +17,6 @@ export default function DashboardPage() {
   const supabase = createSupabaseClient();
 
   const {
-    leads,
-    dailySummary,
     vendorSummary,
     metrics,
     loading,
@@ -62,8 +56,8 @@ export default function DashboardPage() {
     // Listener para mudanças de autenticação
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT" || !session) {
+    } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+      if (!session) {
         router.push("/");
       } else {
         setUser(session.user);
@@ -75,10 +69,6 @@ export default function DashboardPage() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-  };
-
-  const handleVendorClick = (vendedor: string) => {
-    router.push(`/dashboard/vendedor/${vendedor}`);
   };
 
   const periodOptions = [
@@ -107,24 +97,24 @@ export default function DashboardPage() {
 
       {/* Main Content com margem para sidebar */}
       <div className="flex-1 flex flex-col">
-        {/* Header Simplificado */}
-        <header className="bg-card shadow-sm border-b border-border">
+        {/* Header Responsivo */}
+        <header className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 sm:py-0 sm:h-16 gap-3 sm:gap-0">
               <div className="flex items-center">
-                <h1 className="text-2xl font-bold text-foreground">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground">
                   Dashboard Leads (Gerencial)
                 </h1>
               </div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center justify-between sm:justify-end space-x-3 sm:space-x-4">
                 {/* Seletor de período */}
                 <div className="flex items-center space-x-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <Calendar className="w-4 h-4 text-muted-foreground hidden sm:inline" />
                   <select
                     value={period}
                     onChange={(e) => setPeriod(Number(e.target.value))}
-                    className="border border-border bg-background text-foreground rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                    className="border border-border bg-background text-foreground rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
                     {periodOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -151,7 +141,7 @@ export default function DashboardPage() {
         </header>
 
         {/* Main Content */}
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           {error && (
             <div className="bg-danger-50 border border-danger-200 text-danger-700 px-4 py-3 rounded-lg mb-6">
               <div className="flex items-center">
@@ -182,35 +172,7 @@ export default function DashboardPage() {
           <MetricsCards metrics={metrics} loading={loading} />
 
           {/* Funil de Vendas - Largura Total */}
-          <div className="mb-8">
-            <FunnelChart period={period} loading={loading} />
-          </div>
-
-          {/* Grid 3 Componentes Embaixo */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-            {/* Fila Comercial */}
-            <div className="lg:col-span-1">
-              <FilaComercial
-                vendorSummary={vendorSummary}
-                leads={leads}
-                loading={loading}
-                onVendorClick={handleVendorClick}
-              />
-            </div>
-
-            {/* Top Veículos */}
-            <div className="lg:col-span-1">
-              <TopVeiculos leads={leads} loading={loading} />
-            </div>
-
-            {/* Métricas de Conversão */}
-            <div className="lg:col-span-2">
-              <ConversionMetrics period={period} loading={loading} />
-            </div>
-          </div>
-
-          {/* Leads Table */}
-          <LeadsTable leads={leads} loading={loading} />
+          <FunnelChart period={period} loading={loading} />
         </main>
       </div>
     </div>
