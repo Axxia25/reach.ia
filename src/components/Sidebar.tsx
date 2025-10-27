@@ -89,9 +89,9 @@ export default function Sidebar({
 
   return (
     <TooltipProvider>
-      <div
+      <aside
         className={cn(
-          "relative flex h-screen flex-col border-r bg-background transition-all duration-300 ease-in-out",
+          "fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-background transition-all duration-300 ease-in-out",
           isCollapsed ? "w-16" : "w-64",
           className
         )}
@@ -377,7 +377,7 @@ export default function Sidebar({
             )}
           </Tooltip>
         </div>
-      </div>
+      </aside>
     </TooltipProvider>
   );
 }

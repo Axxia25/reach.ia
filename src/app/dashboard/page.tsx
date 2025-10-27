@@ -2,74 +2,20 @@
 
 import FunnelChart from "@/components/FunnelChart";
 import MetricsCards from "@/components/MetricsCards";
-import Sidebar from "@/components/Sidebar";
+import NotificationBell from "@/components/NotificationBell";
 import { useLeads } from "@/hooks/useLeads";
-import { createSupabaseClient } from "@/lib/supabase";
 import { Calendar, RefreshCw } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function DashboardPage() {
   const [period, setPeriod] = useState(7);
-  const [user, setUser] = useState<any>(null);
-  const [userProfile, setUserProfile] = useState<any>(null);
-  const router = useRouter();
-  const supabase = createSupabaseClient();
 
   const {
-    vendorSummary,
     metrics,
     loading,
     error,
     refetch,
   } = useLeads(period);
-
-  // Verificar autenticação e buscar perfil
-  useEffect(() => {
-    const checkAuthAndProfile = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        router.push("/");
-        return;
-      }
-
-      setUser(session.user);
-
-      // Buscar perfil do usuário
-      const { data: profile, error: profileError } = await supabase
-        .from("vendedor_profiles")
-        .select("*")
-        .eq("id", session.user.id)
-        .single();
-
-      if (profileError) {
-        console.error("Erro ao buscar perfil:", profileError);
-      } else {
-        setUserProfile(profile);
-      }
-    };
-
-    checkAuthAndProfile();
-
-    // Listener para mudanças de autenticação
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-      if (!session) {
-        router.push("/");
-      } else {
-        setUser(session.user);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [router, supabase]);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
 
   const periodOptions = [
     { value: 7, label: "Últimos 7 dias" },
@@ -77,26 +23,8 @@ export default function DashboardPage() {
     { value: 90, label: "Últimos 90 dias" },
   ];
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex min-h-screen bg-background">
-      {/* Sidebar */}
-      <Sidebar
-        user={user}
-        userProfile={userProfile}
-        onSignOut={handleSignOut}
-        vendedores={vendorSummary}
-      />
-
-      {/* Main Content com margem para sidebar */}
-      <div className="flex-1 flex flex-col">
+    <div className="flex flex-col min-h-screen">
         {/* Header Responsivo */}
         <header className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -123,6 +51,9 @@ export default function DashboardPage() {
                     ))}
                   </select>
                 </div>
+
+                {/* Sino de Notificações */}
+                <NotificationBell />
 
                 {/* Botão de refresh */}
                 <button
@@ -174,7 +105,6 @@ export default function DashboardPage() {
           {/* Funil de Vendas - Largura Total */}
           <FunnelChart period={period} loading={loading} />
         </main>
-      </div>
     </div>
   );
 }

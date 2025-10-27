@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { ToastProvider } from "@/components/ui/Toast";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -24,7 +25,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <ThemeProvider>
-          {children}
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>
