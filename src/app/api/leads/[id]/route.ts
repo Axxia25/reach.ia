@@ -35,7 +35,7 @@ export async function GET(
       return NextResponse.json(
         {
           error: 'ID inválido',
-          details: validationResult.error.errors.map((err) => ({
+          details: validationResult.error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message,
           })),
