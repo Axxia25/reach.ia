@@ -169,69 +169,62 @@ export default function MetricasComercialPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="p-6 space-y-6">
       {/* Header */}
-      <header className="bg-card shadow-sm border-b border-border sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="p-2 text-muted-foreground hover:text-card-foreground hover:bg-accent rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-card-foreground flex items-center gap-3">
-                  <TrendingUp className="h-7 w-7 text-green-600" />
-                  Métricas Comerciais
-                </h1>
-                <p className="text-sm text-muted-foreground">
-                  Análise detalhada de conversão e leads
-                </p>
-              </div>
-            </div>
-
-            {/* Seletor de Período */}
-            <div className="flex items-center space-x-2 bg-accent rounded-lg p-1">
-              <Calendar className="w-4 h-4 text-muted-foreground ml-2" />
-              <button
-                onClick={() => setPeriod(7)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  period === 7
-                    ? 'bg-primary-500 text-white'
-                    : 'text-muted-foreground hover:text-card-foreground'
-                }`}
-              >
-                7 dias
-              </button>
-              <button
-                onClick={() => setPeriod(30)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  period === 30
-                    ? 'bg-primary-500 text-white'
-                    : 'text-muted-foreground hover:text-card-foreground'
-                }`}
-              >
-                30 dias
-              </button>
-              <button
-                onClick={() => setPeriod(90)}
-                className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                  period === 90
-                    ? 'bg-primary-500 text-white'
-                    : 'text-muted-foreground hover:text-card-foreground'
-                }`}
-              >
-                90 dias
-              </button>
-            </div>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+        <div className="flex items-start gap-3">
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="p-2 text-muted-foreground hover:text-card-foreground hover:bg-accent rounded-lg transition-colors mt-1"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-3xl font-bold text-card-foreground flex items-center gap-3">
+              <TrendingUp className="h-8 w-8 text-green-600" />
+              Métricas Comerciais
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Análise detalhada de conversão e leads em tempo real
+            </p>
           </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Seletor de Período */}
+        <div className="flex items-center gap-2 bg-accent rounded-lg p-1">
+          <Calendar className="w-4 h-4 text-muted-foreground ml-2" />
+          <button
+            onClick={() => setPeriod(7)}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              period === 7
+                ? 'bg-primary-500 text-white'
+                : 'text-muted-foreground hover:text-card-foreground'
+            }`}
+          >
+            7 dias
+          </button>
+          <button
+            onClick={() => setPeriod(30)}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              period === 30
+                ? 'bg-primary-500 text-white'
+                : 'text-muted-foreground hover:text-card-foreground'
+            }`}
+          >
+            30 dias
+          </button>
+          <button
+            onClick={() => setPeriod(90)}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+              period === 90
+                ? 'bg-primary-500 text-white'
+                : 'text-muted-foreground hover:text-card-foreground'
+            }`}
+          >
+            90 dias
+          </button>
+        </div>
+      </div>
         {/* Seção de Métricas de Conversão */}
         {metricsLoading ? (
           <div className="bg-card rounded-xl p-6 shadow-card border border-border">
@@ -520,7 +513,6 @@ export default function MetricasComercialPage() {
             )}
           </div>
         </div>
-      </main>
     </div>
   )
 }
