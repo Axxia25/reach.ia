@@ -286,7 +286,7 @@ export default function Sidebar({
                     asChild
                   >
                     <a href={item.href}>
-                      {item.title}
+                      <span className="flex-1 text-left">{item.title}</span>
                     </a>
                   </Button>
                 </TooltipTrigger>
