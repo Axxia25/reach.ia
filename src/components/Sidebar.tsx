@@ -208,31 +208,28 @@ export default function Sidebar({
               </Tooltip>
 
               {!isCollapsed && (
-                <CollapsibleContent className="space-y-1">
+                <CollapsibleContent className="space-y-1 mt-1">
                   {/* Métricas Financeiras */}
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start pl-8 text-muted-foreground hover:bg-accent"
+                    className="w-full justify-start pl-8 h-9"
                     onClick={() =>
                       router.push("/dashboard/metricas/financeiras")
                     }
                   >
-                    <DollarSign className="mr-2 h-3 w-3" />
-                    <span className="flex-1 text-left">Financeiras</span>
-                    <span className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-200 px-1.5 py-0.5 rounded">
-                      Em Desenvolvimento
-                    </span>
+                    <DollarSign className="mr-2 h-4 w-4" />
+                    Financeiras
                   </Button>
 
                   {/* Métricas de Produto */}
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start pl-8 text-muted-foreground hover:bg-accent"
+                    className="w-full justify-start pl-8 h-9"
                     onClick={() => router.push("/dashboard/metricas/produto")}
                   >
-                    <Car className="mr-2 h-3 w-3" />
+                    <Car className="mr-2 h-4 w-4" />
                     Produto
                   </Button>
 
@@ -240,10 +237,10 @@ export default function Sidebar({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="w-full justify-start pl-8 text-muted-foreground hover:bg-accent"
+                    className="w-full justify-start pl-8 h-9"
                     onClick={() => router.push("/dashboard/metricas/comercial")}
                   >
-                    <TrendingUp className="mr-2 h-3 w-3" />
+                    <TrendingUp className="mr-2 h-4 w-4" />
                     Comercial
                   </Button>
                 </CollapsibleContent>
@@ -290,17 +287,18 @@ export default function Sidebar({
               </Tooltip>
 
               {!isCollapsed && (
-                <CollapsibleContent className="space-y-1">
+                <CollapsibleContent className="space-y-1 mt-1">
                   {vendedoresList.map((vendedor, index) => (
                     <Button
                       key={`vendedor-${vendedor.name}-${index}`}
                       variant="ghost"
-                      className="w-full justify-start pl-8"
+                      size="sm"
+                      className="w-full justify-start pl-8 h-9"
                       asChild
                     >
                       <a href={vendedor.href}>
-                        <Target className="h-3 w-3" />
-                        <span className="ml-3">{vendedor.name}</span>
+                        <Target className="mr-2 h-4 w-4" />
+                        {vendedor.name}
                       </a>
                     </Button>
                   ))}
