@@ -146,24 +146,23 @@ export default function Sidebar({
 
         {/* Navigation */}
         <nav className="flex-1 space-y-2 p-4">
-          {/* Main Navigation - Dashboard (mantido igual) */}
+          {/* Main Navigation - Dashboard */}
           <div className="space-y-1">
             {mainNavItems.map((item) => (
               <Tooltip key={item.href}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
+                    size="sm"
                     className={cn(
-                      "w-full justify-start",
-                      isCollapsed && "px-2"
+                      "w-full justify-start h-9",
+                      isCollapsed ? "px-2" : "pl-8"
                     )}
                     asChild
                   >
                     <a href={item.href}>
-                      <item.icon className="h-4 w-4" />
-                      {!isCollapsed && (
-                        <span className="ml-3">{item.title}</span>
-                      )}
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {!isCollapsed && item.title}
                     </a>
                   </Button>
                 </TooltipTrigger>
@@ -182,18 +181,19 @@ export default function Sidebar({
                   <CollapsibleTrigger asChild>
                     <Button
                       variant="ghost"
+                      size="sm"
                       className={cn(
-                        "w-full justify-start",
-                        isCollapsed && "px-2"
+                        "w-full justify-start h-9",
+                        isCollapsed ? "px-2" : "pl-8"
                       )}
                     >
-                      <BarChart3 className="h-4 w-4" />
+                      <BarChart3 className="mr-2 h-4 w-4" />
                       {!isCollapsed && (
                         <>
-                          <span className="ml-3">Métricas</span>
+                          <span className="flex-1 text-left">Métricas</span>
                           <ChevronDown
                             className={cn(
-                              "ml-auto h-4 w-4 transition-transform",
+                              "h-4 w-4 transition-transform",
                               isMetricasOpen && "rotate-180"
                             )}
                           />
@@ -261,18 +261,19 @@ export default function Sidebar({
                   <CollapsibleTrigger asChild>
                     <Button
                       variant="ghost"
+                      size="sm"
                       className={cn(
-                        "w-full justify-start",
-                        isCollapsed && "px-2"
+                        "w-full justify-start h-9",
+                        isCollapsed ? "px-2" : "pl-8"
                       )}
                     >
-                      <UserCheck className="h-4 w-4" />
+                      <UserCheck className="mr-2 h-4 w-4" />
                       {!isCollapsed && (
                         <>
-                          <span className="ml-3">Vendedores</span>
+                          <span className="flex-1 text-left">Vendedores</span>
                           <ChevronDown
                             className={cn(
-                              "ml-auto h-4 w-4 transition-transform",
+                              "h-4 w-4 transition-transform",
                               isVendedoresOpen && "rotate-180"
                             )}
                           />
@@ -309,24 +310,23 @@ export default function Sidebar({
 
           <Separator />
 
-          {/* Admin Navigation (mantido igual) */}
+          {/* Admin Navigation */}
           <div className="space-y-1">
             {adminNavItems.map((item) => (
               <Tooltip key={item.href}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
+                    size="sm"
                     className={cn(
-                      "w-full justify-start",
-                      isCollapsed && "px-2"
+                      "w-full justify-start h-9",
+                      isCollapsed ? "px-2" : "pl-8"
                     )}
                     asChild
                   >
                     <a href={item.href}>
-                      <item.icon className="h-4 w-4" />
-                      {!isCollapsed && (
-                        <span className="ml-3">{item.title}</span>
-                      )}
+                      <item.icon className="mr-2 h-4 w-4" />
+                      {!isCollapsed && item.title}
                     </a>
                   </Button>
                 </TooltipTrigger>
