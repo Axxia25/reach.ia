@@ -155,8 +155,8 @@ export default function Sidebar({
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "w-full justify-start h-9",
-                      isCollapsed && "px-2"
+                      "w-full justify-start h-9 px-3",
+                      isCollapsed && "!px-2"
                     )}
                     asChild
                   >
@@ -183,8 +183,8 @@ export default function Sidebar({
                       variant="ghost"
                       size="sm"
                       className={cn(
-                        "w-full justify-start h-9",
-                        isCollapsed && "px-2"
+                        "w-full justify-start h-9 px-3",
+                        isCollapsed && "!px-2"
                       )}
                     >
                       <BarChart3 className="mr-2 h-4 w-4" />
@@ -263,8 +263,8 @@ export default function Sidebar({
                       variant="ghost"
                       size="sm"
                       className={cn(
-                        "w-full justify-start h-9",
-                        isCollapsed && "px-2"
+                        "w-full justify-start h-9 px-3",
+                        isCollapsed && "!px-2"
                       )}
                     >
                       <UserCheck className="mr-2 h-4 w-4" />
@@ -319,8 +319,8 @@ export default function Sidebar({
                     variant="ghost"
                     size="sm"
                     className={cn(
-                      "w-full justify-start h-9",
-                      isCollapsed && "px-2"
+                      "w-full justify-start h-9 px-3",
+                      isCollapsed && "!px-2"
                     )}
                     asChild
                   >
