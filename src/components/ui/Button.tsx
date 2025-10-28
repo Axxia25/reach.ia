@@ -55,6 +55,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const Comp = asChild ? Slot : 'button'
 
+    // Quando asChild=true, apenas passamos children sem modificações
+    // Slot requer exatamente 1 filho
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${widthStyles} ${className}`}
+          {...props}
+        >
+          {children}
+        </Comp>
+      )
+    }
+
     return (
       <Comp
         ref={ref}
