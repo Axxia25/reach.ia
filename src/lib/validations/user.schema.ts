@@ -19,10 +19,7 @@ const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 export const registerUserSchema = z
   .object({
     email: z
-      .string({
-        required_error: 'Email é obrigatório',
-        invalid_type_error: 'Email deve ser uma string',
-      })
+      .string({ message: 'Email deve ser uma string' })
       .email('Email inválido')
       .regex(emailRegex, 'Formato de email inválido')
       .min(5, 'Email deve ter pelo menos 5 caracteres')
@@ -31,10 +28,7 @@ export const registerUserSchema = z
       .trim(),
 
     password: z
-      .string({
-        required_error: 'Senha é obrigatória',
-        invalid_type_error: 'Senha deve ser uma string',
-      })
+      .string({ message: 'Senha deve ser uma string' })
       .min(8, 'Senha deve ter pelo menos 8 caracteres')
       .max(100, 'Senha deve ter no máximo 100 caracteres')
       .regex(
@@ -42,23 +36,17 @@ export const registerUserSchema = z
         'Senha deve conter: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial (@$!%*?&#)'
       ),
 
-    confirmPassword: z.string({
-      required_error: 'Confirmação de senha é obrigatória',
-    }),
+    confirmPassword: z.string({ message: 'Confirmação de senha é obrigatória' }),
 
     vendedor_name: z
-      .string({
-        required_error: 'Nome do vendedor é obrigatório',
-        invalid_type_error: 'Nome do vendedor deve ser uma string',
-      })
+      .string({ message: 'Nome do vendedor deve ser uma string' })
       .min(2, 'Nome do vendedor deve ter pelo menos 2 caracteres')
       .max(255, 'Nome do vendedor deve ter no máximo 255 caracteres')
       .trim(),
 
     role: z
       .enum(['vendedor', 'gerente', 'admin'], {
-        required_error: 'Role é obrigatória',
-        invalid_type_error: 'Role deve ser: vendedor, gerente ou admin',
+        message: 'Role deve ser: vendedor, gerente ou admin',
       })
       .default('vendedor'),
   })
@@ -72,19 +60,13 @@ export const registerUserSchema = z
  */
 export const loginUserSchema = z.object({
   email: z
-    .string({
-      required_error: 'Email é obrigatório',
-      invalid_type_error: 'Email deve ser uma string',
-    })
+    .string({ message: 'Email deve ser uma string' })
     .email('Email inválido')
     .toLowerCase()
     .trim(),
 
   password: z
-    .string({
-      required_error: 'Senha é obrigatória',
-      invalid_type_error: 'Senha deve ser uma string',
-    })
+    .string({ message: 'Senha deve ser uma string' })
     .min(1, 'Senha não pode ser vazia'),
 })
 
@@ -93,10 +75,7 @@ export const loginUserSchema = z.object({
  */
 export const updateUserProfileSchema = z.object({
   id: z
-    .string({
-      required_error: 'ID do usuário é obrigatório',
-      invalid_type_error: 'ID deve ser uma string UUID',
-    })
+    .string({ message: 'ID deve ser uma string UUID' })
     .uuid('ID deve ser um UUID válido'),
 
   vendedor_name: z
@@ -108,7 +87,7 @@ export const updateUserProfileSchema = z.object({
 
   role: z
     .enum(['vendedor', 'gerente', 'admin'], {
-      invalid_type_error: 'Role deve ser: vendedor, gerente ou admin',
+      message: 'Role deve ser: vendedor, gerente ou admin',
     })
     .optional(),
 
@@ -135,15 +114,11 @@ export const updateUserProfileSchema = z.object({
 export const changePasswordSchema = z
   .object({
     currentPassword: z
-      .string({
-        required_error: 'Senha atual é obrigatória',
-      })
+      .string({ message: 'Senha atual é obrigatória' })
       .min(1, 'Senha atual não pode ser vazia'),
 
     newPassword: z
-      .string({
-        required_error: 'Nova senha é obrigatória',
-      })
+      .string({ message: 'Nova senha é obrigatória' })
       .min(8, 'Nova senha deve ter pelo menos 8 caracteres')
       .max(100, 'Nova senha deve ter no máximo 100 caracteres')
       .regex(
@@ -151,9 +126,7 @@ export const changePasswordSchema = z
         'Nova senha deve conter: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial'
       ),
 
-    confirmNewPassword: z.string({
-      required_error: 'Confirmação de nova senha é obrigatória',
-    }),
+    confirmNewPassword: z.string({ message: 'Confirmação de nova senha é obrigatória' }),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Senhas não coincidem',
@@ -169,9 +142,7 @@ export const changePasswordSchema = z
  */
 export const resetPasswordSchema = z.object({
   email: z
-    .string({
-      required_error: 'Email é obrigatório',
-    })
+    .string({ message: 'Email é obrigatório' })
     .email('Email inválido')
     .toLowerCase()
     .trim(),
@@ -183,15 +154,11 @@ export const resetPasswordSchema = z.object({
 export const setNewPasswordSchema = z
   .object({
     token: z
-      .string({
-        required_error: 'Token é obrigatório',
-      })
+      .string({ message: 'Token é obrigatório' })
       .min(1, 'Token não pode ser vazio'),
 
     newPassword: z
-      .string({
-        required_error: 'Nova senha é obrigatória',
-      })
+      .string({ message: 'Nova senha é obrigatória' })
       .min(8, 'Nova senha deve ter pelo menos 8 caracteres')
       .max(100, 'Nova senha deve ter no máximo 100 caracteres')
       .regex(
@@ -199,9 +166,7 @@ export const setNewPasswordSchema = z
         'Nova senha deve conter: 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial'
       ),
 
-    confirmNewPassword: z.string({
-      required_error: 'Confirmação de nova senha é obrigatória',
-    }),
+    confirmNewPassword: z.string({ message: 'Confirmação de nova senha é obrigatória' }),
   })
   .refine((data) => data.newPassword === data.confirmNewPassword, {
     message: 'Senhas não coincidem',
@@ -242,9 +207,7 @@ export const listUsersSchema = z.object({
  */
 export const deleteUserSchema = z.object({
   id: z
-    .string({
-      required_error: 'ID do usuário é obrigatório',
-    })
+    .string({ message: 'ID do usuário é obrigatório' })
     .uuid('ID deve ser um UUID válido'),
 })
 
@@ -253,9 +216,7 @@ export const deleteUserSchema = z.object({
  */
 export const verifyEmailSchema = z.object({
   token: z
-    .string({
-      required_error: 'Token de verificação é obrigatório',
-    })
+    .string({ message: 'Token de verificação é obrigatório' })
     .min(1, 'Token não pode ser vazio'),
 })
 

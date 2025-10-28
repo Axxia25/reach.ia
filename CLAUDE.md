@@ -180,12 +180,44 @@ When setting up a new environment:
 4. Manually create user profiles in `vendedor_profiles` table
 5. Configure Site URL in Auth settings to match deployment URL
 
-## Deployment (Netlify)
+## Deployment
+
+### Vercel (Recommended)
+
+**Quick Setup:**
+1. Import the repository on [vercel.com](https://vercel.com)
+2. Vercel auto-detects Next.js settings
+3. Add environment variables in Project Settings:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+4. Deploy
+
+**Configuration:**
+- Build command: `npm run build` (auto-detected)
+- Output directory: `.next` (auto-detected)
+- Install command: `npm install` (auto-detected)
+- Node version: 18+ (auto-detected from package.json engines)
+- Region: `gru1` (São Paulo - configured in vercel.json)
+
+The `vercel.json` includes:
+- Security headers (X-Frame-Options, CSP, etc.)
+- Cache optimization for static assets
+- Regional deployment settings
+
+**After deployment:**
+1. Update Supabase Auth settings:
+   - Set Site URL to Vercel domain (e.g., `https://your-app.vercel.app`)
+   - Add redirect URLs: `https://your-app.vercel.app/auth/callback`
+2. Test authentication flow
+3. Verify real-time updates work across clients
+
+### Netlify (Alternative)
 
 Build settings:
 - **Build command**: `npm run build`
 - **Publish directory**: `.next`
-- **Node version**: 18+
+- **Node version**: 20
+- Requires `@netlify/plugin-nextjs` plugin (configured in netlify.toml)
 
 Required environment variables (same as local):
 - `NEXT_PUBLIC_SUPABASE_URL`

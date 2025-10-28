@@ -18,10 +18,7 @@ const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{3})?(?:Z|[+-]\
 export const createLeadSchema = z.object({
   // Campos obrigatórios
   nome: z
-    .string({
-      required_error: 'Nome é obrigatório',
-      invalid_type_error: 'Nome deve ser uma string',
-    })
+    .string({ message: 'Nome deve ser uma string' })
     .min(2, 'Nome deve ter pelo menos 2 caracteres')
     .max(255, 'Nome deve ter no máximo 255 caracteres')
     .trim()
@@ -30,10 +27,7 @@ export const createLeadSchema = z.object({
     }),
 
   timestamps: z
-    .string({
-      required_error: 'Timestamps é obrigatório',
-      invalid_type_error: 'Timestamps deve ser uma string ISO 8601',
-    })
+    .string({ message: 'Timestamps deve ser uma string ISO 8601' })
     .regex(isoDateRegex, 'Timestamps deve estar no formato ISO 8601 (ex: 2025-01-01T12:00:00Z)')
     .refine((val) => !isNaN(Date.parse(val)), {
       message: 'Timestamps deve ser uma data válida',
@@ -86,10 +80,7 @@ export const createLeadSchema = z.object({
  */
 export const updateLeadSchema = z.object({
   id: z
-    .number({
-      required_error: 'ID é obrigatório para atualização',
-      invalid_type_error: 'ID deve ser um número',
-    })
+    .number({ message: 'ID deve ser um número' })
     .int('ID deve ser um número inteiro')
     .positive('ID deve ser positivo'),
 
@@ -191,10 +182,7 @@ export const searchLeadsSchema = z.object({
  */
 export const deleteLeadSchema = z.object({
   id: z
-    .number({
-      required_error: 'ID é obrigatório para deleção',
-      invalid_type_error: 'ID deve ser um número',
-    })
+    .number({ message: 'ID deve ser um número' })
     .int('ID deve ser um número inteiro')
     .positive('ID deve ser positivo'),
 })
@@ -204,19 +192,14 @@ export const deleteLeadSchema = z.object({
  */
 export const updateLeadStatusSchema = z.object({
   id: z
-    .number({
-      required_error: 'ID é obrigatório',
-      invalid_type_error: 'ID deve ser um número',
-    })
+    .number({ message: 'ID deve ser um número' })
     .int('ID deve ser um número inteiro')
     .positive('ID deve ser positivo'),
 
   status: z.enum(
     ['novo', 'contatado', 'qualificado', 'negociacao', 'ganho', 'perdido'],
     {
-      required_error: 'Status é obrigatório',
-      invalid_type_error:
-        'Status deve ser: novo, contatado, qualificado, negociacao, ganho ou perdido',
+      message: 'Status deve ser: novo, contatado, qualificado, negociacao, ganho ou perdido',
     }
   ),
 

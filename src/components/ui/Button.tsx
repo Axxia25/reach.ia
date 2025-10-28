@@ -4,14 +4,16 @@
  */
 
 import React from 'react'
+import { Slot } from '@radix-ui/react-slot'
 import { Loader2 } from 'lucide-react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success'
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'icon'
   loading?: boolean
   icon?: React.ReactNode
   fullWidth?: boolean
+  asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -23,6 +25,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       loading = false,
       icon,
       fullWidth = false,
+      asChild = false,
       disabled,
       className = '',
       ...props
@@ -43,14 +46,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       sm: 'px-3 py-1.5 text-sm',
       md: 'px-4 py-2 text-base',
       lg: 'px-6 py-3 text-lg',
+      icon: 'h-9 w-9 p-0',
     }
 
     const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60'
 
     const widthStyles = fullWidth ? 'w-full' : ''
 
+    const Comp = asChild ? Slot : 'button'
+
     return (
-      <button
+      <Comp
         ref={ref}
         disabled={disabled || loading}
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${widthStyles} ${className}`}
@@ -59,7 +65,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         {!loading && icon && <span className="flex items-center">{icon}</span>}
         {children}
-      </button>
+      </Comp>
     )
   }
 )

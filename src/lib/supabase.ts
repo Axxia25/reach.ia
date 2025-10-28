@@ -17,13 +17,15 @@ export const supabase = createClient(supabaseUrl!, supabaseAnonKey!)
 // Cliente para componentes (recomendado para Next.js 13+)
 export const createSupabaseClient = () => {
   const client = createClientComponentClient()
-  
+
   // Debug: Verificar se o cliente foi criado
-  console.log('✅ Cliente Supabase criado:', {
-    url: client.supabaseUrl,
-    hasAuth: !!client.auth
-  })
-  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('✅ Cliente Supabase criado:', {
+      url: supabaseUrl,
+      hasAuth: !!client.auth
+    })
+  }
+
   return client
 }
 

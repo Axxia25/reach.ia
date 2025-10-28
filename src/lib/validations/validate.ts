@@ -48,7 +48,7 @@ export function validate<T extends z.ZodTypeAny>(
         success: false,
         error: {
           message: 'Erro de validação dos dados',
-          errors: error.errors.map((err) => ({
+          errors: error.issues.map((err) => ({
             field: err.path.join('.'),
             message: err.message,
           })),
@@ -250,11 +250,11 @@ export function validateAndSanitize<T extends z.ZodTypeAny>(
   }
 
   // Sanitizar dados validados
-  const sanitized = sanitizeObject(result.data)
+  const sanitized = sanitizeObject(result.data as Record<string, any>)
 
   return {
     success: true,
-    data: sanitized,
+    data: sanitized as z.infer<T>,
   }
 }
 
