@@ -1,6 +1,7 @@
 "use client";
 
 import FunnelChart from "@/components/FunnelChart";
+import InsightsPanel from "@/components/InsightsPanel";
 import MetricsCards from "@/components/MetricsCards";
 import NotificationBell from "@/components/NotificationBell";
 import { useLeads } from "@/hooks/useLeads";
@@ -96,6 +97,11 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      {/* Botão de Insights com IA */}
+      <div className="flex justify-center">
+        <InsightsPanel metrics={metrics} period={period} />
+      </div>
 
       {/* Metrics Cards */}
       <MetricsCards metrics={metrics} loading={loading} />
