@@ -32,8 +32,6 @@ const nextConfig = {
     ];
   },
   trailingSlash: false,
-  // Só usar export em produção para o Netlify
-  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
 }
 
 module.exports = nextConfig
