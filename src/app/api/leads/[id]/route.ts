@@ -121,7 +121,7 @@ export async function PUT(
     const idValidation = idParamSchema.safeParse(params)
     if (!idValidation.success) {
       return NextResponse.json(
-        { error: 'ID inválido', details: idValidation.error.errors },
+        { error: 'ID inválido', details: idValidation.error.issues },
         { status: 400 }
       )
     }
@@ -221,7 +221,7 @@ export async function DELETE(
     const idValidation = idParamSchema.safeParse(params)
     if (!idValidation.success) {
       return NextResponse.json(
-        { error: 'ID inválido', details: idValidation.error.errors },
+        { error: 'ID inválido', details: idValidation.error.issues },
         { status: 400 }
       )
     }
