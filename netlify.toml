@@ -1,28 +1,13 @@
 [build]
-  publish = ".next"
-  command = "npm run build"
+  command = "npm install && npm run build"
+  publish = "out"
 
 [build.environment]
-  NPM_FLAGS = "--version"
   NODE_VERSION = "18"
+  NODE_ENV = "production"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-[context.production]
-  environment = { NODE_ENV = "production" }
-
-[context.deploy-preview]
-  environment = { NODE_ENV = "preview" }
-
-[context.branch-deploy]
-  environment = { NODE_ENV = "development" }
-
-# Redirect rules for SPA behavior
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
 
 # Security headers
 [[headers]]
