@@ -146,7 +146,7 @@ export default function Sidebar({
                     asChild
                   >
                     <a href={item.href}>
-                      {item.title}
+                      <span className="flex-1 text-left">{item.title}</span>
                     </a>
                   </Button>
                 </TooltipTrigger>
@@ -298,7 +298,7 @@ export default function Sidebar({
           </div>
         </nav>
 
-        {/* Footer - User Profile (mantido igual) */}
+        {/* Footer - User Profile */}
         <div className="p-4">
           <Separator className="mb-4" />
           <Tooltip>
@@ -311,15 +311,24 @@ export default function Sidebar({
               >
                 <Avatar className="h-8 w-8">
                   <AvatarImage src="/placeholder-user.jpg" />
-                  <AvatarFallback>MG</AvatarFallback>
+                  <AvatarFallback>
+                    {userProfile?.vendedor_name
+                      ? userProfile.vendedor_name
+                          .split(" ")
+                          .map((n: string) => n[0])
+                          .join("")
+                          .toUpperCase()
+                          .slice(0, 2)
+                      : user?.email?.[0]?.toUpperCase() || "U"}
+                  </AvatarFallback>
                 </Avatar>
                 {!isCollapsed && (
                   <div className="flex-1 overflow-hidden">
                     <p className="text-sm font-medium truncate">
-                      Moreno Guimarães
+                      {userProfile?.vendedor_name || user?.email || "Usuário"}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
-                      Admin
+                      {userProfile?.role || "Usuário"}
                     </p>
                   </div>
                 )}
@@ -328,8 +337,12 @@ export default function Sidebar({
             {isCollapsed && (
               <TooltipContent side="right">
                 <div>
-                  <p className="font-medium">Moreno Guimarães</p>
-                  <p className="text-xs text-muted-foreground">Admin</p>
+                  <p className="font-medium">
+                    {userProfile?.vendedor_name || user?.email || "Usuário"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {userProfile?.role || "Usuário"}
+                  </p>
                 </div>
               </TooltipContent>
             )}
