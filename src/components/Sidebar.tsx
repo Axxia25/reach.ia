@@ -16,20 +16,11 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import {
-  BarChart3,
-  Car,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  DollarSign,
-  LayoutDashboard,
   Moon,
-  Settings,
   Sun,
-  Target,
-  TrendingUp,
-  UserCheck,
-  Users,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -60,7 +51,6 @@ export default function Sidebar({
     {
       title: "Dashboard",
       href: "/dashboard",
-      icon: LayoutDashboard,
     },
     // REMOVIDO: Item "Métricas" simples - substituído por menu collapsible abaixo
   ];
@@ -78,12 +68,10 @@ export default function Sidebar({
     {
       title: "Gestão de Usuários",
       href: "/dashboard/admin/usuarios",
-      icon: Users,
     },
     {
       title: "Configurações",
       href: "/dashboard/configuracoes",
-      icon: Settings,
     },
   ];
 
@@ -154,15 +142,11 @@ export default function Sidebar({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn(
-                      "w-full justify-start h-9 px-3",
-                      isCollapsed && "!px-2"
-                    )}
+                    className="w-full justify-start h-9 px-3"
                     asChild
                   >
                     <a href={item.href}>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!isCollapsed && item.title}
+                      {item.title}
                     </a>
                   </Button>
                 </TooltipTrigger>
@@ -182,23 +166,15 @@ export default function Sidebar({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "w-full justify-start h-9 px-3",
-                        isCollapsed && "!px-2"
-                      )}
+                      className="w-full justify-start h-9 px-3"
                     >
-                      <BarChart3 className="mr-2 h-4 w-4" />
-                      {!isCollapsed && (
-                        <>
-                          <span className="flex-1 text-left">Métricas</span>
-                          <ChevronDown
-                            className={cn(
-                              "h-4 w-4 transition-transform",
-                              isMetricasOpen && "rotate-180"
-                            )}
-                          />
-                        </>
-                      )}
+                      <span className="flex-1 text-left">Métricas</span>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
+                          isMetricasOpen && "rotate-180"
+                        )}
+                      />
                     </Button>
                   </CollapsibleTrigger>
                 </TooltipTrigger>
@@ -218,7 +194,6 @@ export default function Sidebar({
                       router.push("/dashboard/metricas/financeiras")
                     }
                   >
-                    <DollarSign className="mr-2 h-4 w-4" />
                     Financeiras
                   </Button>
 
@@ -229,7 +204,6 @@ export default function Sidebar({
                     className="w-full justify-start pl-8 h-9"
                     onClick={() => router.push("/dashboard/metricas/produto")}
                   >
-                    <Car className="mr-2 h-4 w-4" />
                     Produto
                   </Button>
 
@@ -240,7 +214,6 @@ export default function Sidebar({
                     className="w-full justify-start pl-8 h-9"
                     onClick={() => router.push("/dashboard/metricas/comercial")}
                   >
-                    <TrendingUp className="mr-2 h-4 w-4" />
                     Comercial
                   </Button>
                 </CollapsibleContent>
@@ -250,7 +223,7 @@ export default function Sidebar({
 
           <Separator />
 
-          {/* Vendedores Section (mantido igual) */}
+          {/* Vendedores Section */}
           <div className="space-y-1">
             <Collapsible
               open={isVendedoresOpen}
@@ -262,23 +235,15 @@ export default function Sidebar({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cn(
-                        "w-full justify-start h-9 px-3",
-                        isCollapsed && "!px-2"
-                      )}
+                      className="w-full justify-start h-9 px-3"
                     >
-                      <UserCheck className="mr-2 h-4 w-4" />
-                      {!isCollapsed && (
-                        <>
-                          <span className="flex-1 text-left">Vendedores</span>
-                          <ChevronDown
-                            className={cn(
-                              "h-4 w-4 transition-transform",
-                              isVendedoresOpen && "rotate-180"
-                            )}
-                          />
-                        </>
-                      )}
+                      <span className="flex-1 text-left">Vendedores</span>
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 transition-transform",
+                          isVendedoresOpen && "rotate-180"
+                        )}
+                      />
                     </Button>
                   </CollapsibleTrigger>
                 </TooltipTrigger>
@@ -298,7 +263,6 @@ export default function Sidebar({
                       asChild
                     >
                       <a href={vendedor.href}>
-                        <Target className="mr-2 h-4 w-4" />
                         {vendedor.name}
                       </a>
                     </Button>
@@ -318,15 +282,11 @@ export default function Sidebar({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cn(
-                      "w-full justify-start h-9 px-3",
-                      isCollapsed && "!px-2"
-                    )}
+                    className="w-full justify-start h-9 px-3"
                     asChild
                   >
                     <a href={item.href}>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!isCollapsed && item.title}
+                      {item.title}
                     </a>
                   </Button>
                 </TooltipTrigger>
